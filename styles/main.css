@@ -69,7 +69,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Custom Magnetic Cursor */
+/* Custom Magnetic Liquid Glass Cursor */
 body, a, button, input, select, textarea, label, [role="button"], .btn, .chip-btn, .filter-btn, .nav-link, .modal-close {
   cursor: none !important;
 }
@@ -83,38 +83,39 @@ body, a, button, input, select, textarea, label, [role="button"], .btn, .chip-bt
   z-index: 999999;
   transform: translate(-50%, -50%);
   opacity: 1;
+  mix-blend-mode: difference;
   will-change: transform, left, top, opacity, width, height;
 }
 
 #cursor-dot {
   width: 8px;
   height: 8px;
-  background-color: var(--accent-cyan);
+  background-color: #ffffff;
   border-radius: 50%;
-  transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
 }
 
 #cursor-ring {
-  width: 34px;
-  height: 34px;
-  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  width: 36px;
+  height: 36px;
+  border: 1.5px solid #ffffff;
   border-radius: 50%;
-  transition: opacity 0.3s ease, width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), border 0.3s ease;
+  transition: opacity 0.3s ease, width 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), height 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
 
 #cursor-dot.hover-active {
-  transform: translate(-50%, -50%) scale(0.5);
-  background-color: transparent;
+  transform: translate(-50%, -50%) scale(0.3);
+  background-color: #ffffff;
 }
 
 #cursor-ring.hover-active {
-  width: 56px;
-  height: 56px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1.5px solid var(--accent-cyan);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1.5px solid #ffffff;
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.5), inset 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 /* Scrollbar */

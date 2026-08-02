@@ -44,6 +44,9 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Custom Circular Cursor Logic
   initCustomCursor();
 
+  // Initialize Scroll Action Indicator Pill Button
+  initScrollIndicator();
+
   // Initialize Trionn Interactions (Lenis, Magnetic, Scroll Reveals)
   initTrionnInteractions();
 
@@ -60,6 +63,32 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+/**
+ * Scroll Action Indicator Pill Controller
+ */
+function initScrollIndicator() {
+  const btn = document.getElementById('scroll-indicator-btn');
+  if (!btn) return;
+
+  const handleScroll = () => {
+    if (window.scrollY > 20) {
+      btn.classList.add('scrolled-hidden');
+    } else {
+      btn.classList.remove('scrolled-hidden');
+    }
+  };
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({
+      top: window.innerHeight * 0.8,
+      behavior: 'smooth'
+    });
+  });
+}
 
 /**
  * Custom Inverted Circular Cursor Controller
