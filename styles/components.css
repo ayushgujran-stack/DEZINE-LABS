@@ -529,51 +529,49 @@
 @media (max-width: 639px)  { .fan-card { width:  8rem; border-radius: 0.625rem; } }
 @media (max-width: 479px)  { .fan-card { width:  6.5rem; border-radius: 0.5rem; } }
 
-/* Floating Scroll Action Indicator Pill Button */
+/* Minimal Pure Text Scroll Indicator (No Glass Container) */
 #scroll-indicator-btn {
   position: fixed;
-  bottom: 2rem;
+  bottom: 2.5rem;
   left: 50%;
   transform: translateX(-50%) translateY(0);
   z-index: 999;
-  background: rgba(10, 12, 18, 0.75);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 9999px;
-  padding: 0.55rem 1.4rem;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  color: #ffffff;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.85);
   font-family: var(--font-heading);
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 245, 212, 0.18);
+  cursor: pointer;
   pointer-events: auto;
   opacity: 1;
   visibility: visible;
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, visibility 0.5s ease, background 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, visibility 0.5s ease, color 0.3s ease;
   user-select: none;
 }
 
 #scroll-indicator-btn:hover {
-  background: rgba(14, 18, 28, 0.92);
-  border-color: var(--accent-cyan);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), 0 0 25px rgba(0, 245, 212, 0.3);
+  color: var(--accent-cyan);
 }
 
 #scroll-indicator-btn.scrolled-hidden {
-  transform: translateX(-50%) translateY(-40px);
+  transform: translateX(-50%) translateY(-35px);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
 }
 
 .scroll-bounce-icon {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--accent-cyan);
   animation: scrollChevronBounce 1.8s ease-in-out infinite;
 }
