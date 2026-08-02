@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  shadcn/ui CSS custom properties — these map Tailwind's semantic tokens
+  to the DEZINE dark-mode palette so Tailwind utility classes like
+  text-foreground, text-muted-foreground, bg-background, border-border, etc.
+  resolve correctly inside the React footer component.
+*/
+
+@layer base {
+  :root {
+    --background: 228 33% 3%;
+    --foreground: 224 52% 96%;
+    --muted: 225 25% 7%;
+    --muted-foreground: 220 16% 61%;
+    --border: 0 0% 100% / 0.08;
+    --primary: 271 76% 53%;
+    --primary-foreground: 0 0% 100%;
+  }
+}

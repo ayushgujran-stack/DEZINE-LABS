@@ -1,0 +1,429 @@
+/* ==========================================
+   DEZINE CREATIVE AGENCY - DESIGN SYSTEM
+   ========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  /* Color Palette */
+  --bg-dark: #000000;
+  --bg-surface: #0a0a0a;
+  --bg-glass: rgba(0, 0, 0, 0.85);
+  --bg-glass-card: rgba(10, 10, 10, 0.9);
+  --bg-glass-hover: rgba(26, 26, 26, 1);
+  
+  --border-glass: rgba(255, 255, 255, 0.15);
+  --border-glass-light: rgba(255, 255, 255, 0.25);
+  --border-accent: rgba(255, 255, 255, 0.8);
+
+  --accent-purple: #ffffff;
+  --accent-pink: #cccccc;
+  --accent-cyan: #ffffff;
+  --accent-blue: #999999;
+
+  --gradient-primary: linear-gradient(135deg, #ffffff 0%, #dddddd 50%, #aaaaaa 100%);
+  --gradient-glow: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  --gradient-dark: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 1) 100%);
+
+  --text-main: #ffffff;
+  --text-muted: #a3a3a3;
+  --text-dim: #737373;
+
+  /* Typography */
+  --font-heading: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Spacing & Radius */
+  --radius-sm: 0px;
+  --radius-md: 4px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* Shadows & Effects */
+  --shadow-glass: 0 4px 20px 0 rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px rgba(255, 255, 255, 0.1);
+  --backdrop-blur: blur(4px);
+}
+
+/* Reset & Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Magnetic Cursor */
+body, a, button, input, select, textarea, label, [role="button"], .btn, .chip-btn, .filter-btn, .nav-link, .modal-close {
+  cursor: none !important;
+}
+
+#cursor-dot,
+#cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 999999;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  will-change: transform, left, top, opacity, width, height;
+}
+
+#cursor-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--accent-cyan);
+  border-radius: 50%;
+  transition: opacity 0.3s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease;
+}
+
+#cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-radius: 50%;
+  transition: opacity 0.3s ease, width 0.3s cubic-bezier(0.16, 1, 0.3, 1), height 0.3s cubic-bezier(0.16, 1, 0.3, 1), border 0.3s ease;
+}
+
+#cursor-dot.hover-active {
+  transform: translate(-50%, -50%) scale(0.5);
+  background-color: transparent;
+}
+
+#cursor-ring.hover-active {
+  width: 56px;
+  height: 56px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid var(--accent-cyan);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-glass-light);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-purple);
+}
+
+/* Canvas & Sticky Scroll Engine Container */
+.scroll-sequence-container {
+  position: relative;
+  width: 100%;
+  /* Total height controls scroll duration of frame sequence */
+  height: 500vh;
+}
+
+.sticky-canvas-viewport {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 1;
+}
+
+#scroll-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.canvas-overlay-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(6,7,10,0.1) 0%, rgba(6,7,10,0.75) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Content Container over Scroll Sequence — hidden so canvas plays clean */
+.scroll-content-overlay {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  pointer-events: none;
+  display: none;
+}
+
+.scroll-step {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  opacity: 0;
+  transform: translateY(30px) scale(0.96);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.scroll-step.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Minimal Cards */
+.glass-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass-light);
+  border-radius: var(--radius-md);
+  padding: 2.5rem;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: var(--text-main);
+}
+
+.glass-pill {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-glass-light);
+  padding: 0.4rem 1.2rem;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+/* Typography Utilities */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-main);
+}
+
+.gradient-text {
+  color: var(--text-muted);
+  display: inline-block;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  margin-bottom: 1rem;
+}
+
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: 1.15rem;
+  max-width: 600px;
+  margin-bottom: 2.5rem;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0.9rem 2rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: var(--text-main);
+  color: var(--bg-dark);
+  border-color: var(--text-main);
+  box-shadow: none;
+}
+
+.btn-primary:hover {
+  background: transparent;
+  color: var(--text-main);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-main);
+  border-color: var(--border-glass-light);
+  backdrop-filter: blur(4px);
+}
+
+.btn-secondary:hover {
+  background: var(--text-main);
+  color: var(--bg-dark);
+  border-color: var(--text-main);
+  transform: translateY(-2px);
+}
+
+/* Normal Page Sections Below Scroll Sequence */
+.page-section {
+  position: relative;
+  z-index: 10;
+  padding: 7rem 2rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Preloader & ZIP Toolbar */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-dark);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+#preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.loader-bar-track {
+  width: 260px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.loader-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--gradient-primary);
+  transition: width 0.2s ease;
+}
+
+/* Floating Toolbar for Zip upload */
+.zip-uploader-toolbar {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  background: var(--bg-glass-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-glass-light);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-glass);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.85rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
+}
+
+.zip-uploader-toolbar.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.zip-uploader-toolbar label {
+  cursor: pointer;
+  color: var(--accent-cyan);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.zip-uploader-toolbar input[type="file"] {
+  display: none;
+}
+
+/* ==========================================
+   TRIONN-STYLE BLINDS TRANSITION EFFECT
+   ========================================== */
+.blinds-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  pointer-events: none;
+  display: flex;
+  overflow: hidden;
+}
+
+.blind-slat {
+  flex: 1;
+  height: 100%;
+  background-color: #000000;
+  transform: scaleY(0);
+  transform-origin: top;
+  will-change: transform;
+}
+
+.blind-slat:nth-child(even) {
+  transform-origin: bottom;
+}
