@@ -7,13 +7,14 @@ export class ScrollSequenceEngine {
     this.canvas = document.getElementById(options.canvasId || 'scroll-canvas');
     this.ctx = this.canvas.getContext('2d');
     this.container = document.querySelector(options.containerSelector || '.scroll-sequence-container');
-    this.frameCount = options.frameCount || 120;
+    this.requestedFrameCount = options.frameCount || 99;
+    this.frameCount = this.requestedFrameCount;
     
     this.images = [];
-    this.loadedFrames = 0;
     this.targetFrame = 0;
     this.currentFrame = 0;
     this.isUsingProceduralFallback = false;
+    this.lastValidImg = null;
     
     this.initCanvas();
     this.bindEvents();
@@ -36,46 +37,76 @@ export class ScrollSequenceEngine {
     this.renderCurrentFrame();
   }
 
+  async findWorkingFrameBaseUrl(initialBaseUrl = '/frames/') {
+    const candidatePaths = [
+      initialBaseUrl,
+      './frames/',
+      'frames/',
+      '/public/frames/',
+      './public/frames/'
+    ];
+
+    for (const path of candidatePaths) {
+      const normalizedPath = path.endsWith('/') ? path : `${path}/`;
+      const testImg = new Image();
+      const loaded = await new Promise((resolve) => {
+        testImg.onload = () => resolve(true);
+        testImg.onerror = () => resolve(false);
+        testImg.src = `${normalizedPath}frame_0001.png`;
+      });
+
+      if (loaded) {
+        return normalizedPath;
+      }
+    }
+
+    return initialBaseUrl.endsWith('/') ? initialBaseUrl : `${initialBaseUrl}/`;
+  }
+
   async loadFrames(frameBaseUrl = '/frames/') {
     const preloaderBar = document.querySelector('.loader-bar-fill');
     const preloaderStatus = document.getElementById('preloader-status');
 
+    const workingBaseUrl = await this.findWorkingFrameBaseUrl(frameBaseUrl);
+
     let loadedCount = 0;
     const loadPromises = [];
+    const loadedMap = new Map();
 
-    // Try loading frames from directory
-    for (let i = 1; i <= this.frameCount; i++) {
+    for (let i = 1; i <= this.requestedFrameCount; i++) {
       const paddedIndex = String(i).padStart(4, '0');
       const img = new Image();
       
       const promise = new Promise((resolve) => {
         img.onload = () => {
           loadedCount++;
-          if (preloaderBar) preloaderBar.style.width = `${(loadedCount / this.frameCount) * 100}%`;
-          if (preloaderStatus) preloaderStatus.textContent = `Loading frame ${loadedCount}/${this.frameCount}...`;
-          resolve(img);
+          if (preloaderBar) preloaderBar.style.width = `${(loadedCount / this.requestedFrameCount) * 100}%`;
+          if (preloaderStatus) preloaderStatus.textContent = `Loading frame ${loadedCount}/${this.requestedFrameCount}...`;
+          loadedMap.set(i - 1, img);
+          resolve({ index: i - 1, img });
         };
         img.onerror = () => {
-          // Frame not found
           resolve(null);
         };
-        img.src = `${frameBaseUrl}frame_${paddedIndex}.png`;
+        img.src = `${workingBaseUrl}frame_${paddedIndex}.png`;
       });
       
       loadPromises.push(promise);
-      this.images.push(img);
     }
 
     const results = await Promise.all(loadPromises);
-    const validImages = results.filter(img => img !== null);
+    const validResults = results.filter(res => res !== null);
 
-    if (validImages.length < 5) {
-      console.warn('Frames not detected in public/frames/. Initializing 3D Procedural Canvas Engine fallback.');
+    if (validResults.length < 5) {
+      console.warn('Frames not detected. Initializing 3D Procedural Canvas Engine fallback.');
       this.isUsingProceduralFallback = true;
       if (preloaderBar) preloaderBar.style.width = '100%';
     } else {
       this.isUsingProceduralFallback = false;
-      this.frameCount = validImages.length;
+      // Sort valid loaded images sequentially by index
+      validResults.sort((a, b) => a.index - b.index);
+      this.images = validResults.map(res => res.img);
+      this.frameCount = this.images.length;
     }
 
     // Hide preloader after brief moment
@@ -85,23 +116,6 @@ export class ScrollSequenceEngine {
     }, 600);
 
     this.startAnimationLoop();
-  }
-
-  loadFramesFromFiles(fileList) {
-    const sortedFiles = Array.from(fileList).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
-    if (sortedFiles.length === 0) return;
-
-    this.images = [];
-    this.frameCount = sortedFiles.length;
-    this.isUsingProceduralFallback = false;
-
-    sortedFiles.forEach((file, index) => {
-      const img = new Image();
-      img.src = URL.createObjectURL(file);
-      this.images[index] = img;
-    });
-
-    console.log(`Loaded ${this.frameCount} custom frames from user upload.`);
   }
 
   bindEvents() {
@@ -118,15 +132,12 @@ export class ScrollSequenceEngine {
     const progress = Math.min(1, Math.max(0, currentScroll / scrollDistance));
     this.targetFrame = progress * (this.frameCount - 1);
 
-    // Show navbar and toolbar as scroll sequence reaches 85%
+    // Show navbar as scroll sequence reaches 85%
     const navbar = document.getElementById('navbar');
-    const toolbar = document.querySelector('.zip-uploader-toolbar');
     if (progress >= 0.85) {
       if (navbar) navbar.classList.add('visible');
-      if (toolbar) toolbar.classList.add('visible');
     } else {
       if (navbar) navbar.classList.remove('visible');
-      if (toolbar) toolbar.classList.remove('visible');
     }
   }
 
@@ -148,13 +159,38 @@ export class ScrollSequenceEngine {
       return;
     }
 
-    const frameIndex = Math.round(this.currentFrame);
-    const img = this.images[frameIndex];
+    if (!this.images || this.images.length === 0) {
+      return;
+    }
+
+    const frameIndex = Math.min(
+      this.images.length - 1,
+      Math.max(0, Math.round(this.currentFrame))
+    );
+
+    let img = this.images[frameIndex];
+
+    // Fallback to closest valid loaded image if current frame is buffering
+    if (!img || !img.complete || img.naturalWidth === 0) {
+      for (let offset = 1; offset < this.images.length; offset++) {
+        const prev = this.images[frameIndex - offset];
+        if (prev && prev.complete && prev.naturalWidth > 0) {
+          img = prev;
+          break;
+        }
+        const next = this.images[frameIndex + offset];
+        if (next && next.complete && next.naturalWidth > 0) {
+          img = next;
+          break;
+        }
+      }
+    }
 
     if (img && img.complete && img.naturalWidth > 0) {
       this.drawCoverImage(img);
-    } else {
-      this.renderProceduralCanvasFrame(this.currentFrame);
+      this.lastValidImg = img;
+    } else if (this.lastValidImg) {
+      this.drawCoverImage(this.lastValidImg);
     }
   }
 
@@ -224,3 +260,4 @@ export class ScrollSequenceEngine {
     this.ctx.restore();
   }
 }
+

@@ -117,12 +117,12 @@ function initBlindsEffect() {
 
   const slats = blindsContainer.querySelectorAll('.blind-slat');
 
-  // GSAP ScrollTrigger timeline: expand black slats quickly as scroll reaches 85%
+  // GSAP ScrollTrigger timeline: expand black slats between 78% and 86%
   gsap.timeline({
     scrollTrigger: {
       trigger: scrollContainer,
-      start: "72% top",
-      end: "85% top",
+      start: "78% top",
+      end: "86% top",
       scrub: 0.15,
     }
   }).to(slats, {

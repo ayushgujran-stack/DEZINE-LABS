@@ -1,70 +1,81 @@
-/**
- * React mount point for the KineticGrid background — shows the DEZINE LABS
- * logo centered on a pure-black interactive grid with a 3D hover tilt effect.
- */
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
+import { motion, useTransform, useMotionTemplate } from "framer-motion";
 import KineticGrid from "@/components/ui/kinetic-grid";
+import { KineticEnvironment, useKineticEnvironment } from "@/components/ui/kinetic-environment";
+import { KineticGhostTypography } from "@/components/ui/kinetic-ghost-typography";
+import { KineticMicroData } from "@/components/ui/kinetic-micro-data";
 import "../styles/tailwind.css";
 
+const easterEggMessages = [
+  "CAREFUL.",
+  "YOU FOUND IT.",
+  "TOO CLOSE.",
+  "IT'S ALIVE.",
+  "OBJECT DETECTED."
+];
+
 function Logo3D() {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const glowRef = useRef<HTMLDivElement>(null);
+  const { cursorX, cursorY, radius, rawX, rawY } = useKineticEnvironment();
+  const [easterEgg, setEasterEgg] = useState<string | null>(null);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    const card = cardRef.current;
-    const glow = glowRef.current;
-    if (!card) return;
+  // Tilt: ±15deg max, mapped from cursor (0->1) to (-15->15)
+  const rotateY = useTransform(cursorX, [0, 1], [-15, 15]);
+  const rotateX = useTransform(cursorY, [0, 1], [15, -15]); // Inverted for natural tilt
 
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
+  // Scale up slightly when close to center (radius 0 -> 1)
+  const scale = useTransform(radius, [0, 1], [1, 1.04]);
+  
+  // Transform string for Framer Motion
+  const transform = useMotionTemplate`perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scale}, ${scale}, ${scale})`;
 
-    // Tilt: ±15deg max
-    const rotateY = ((x - centerX) / centerX) * 15;
-    const rotateX = ((centerY - y) / centerY) * 15;
+  // Glow moves with raw cursor
+  const glowOpacity = useTransform(radius, [0, 1], [0, 1]);
+  const glowBackground = useMotionTemplate`radial-gradient(circle at ${rawX}px ${rawY}px, rgba(0,220,255,0.15) 0%, transparent 60%)`;
 
-    card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+  // Easter Egg logic
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    
+    // Subscribe to radius changes
+    const unsubscribe = radius.on("change", (v) => {
+      // If cursor is very close to center (e.g. > 0.95)
+      if (v > 0.95) {
+        if (!easterEgg) {
+          // Set a random message if one isn't already set
+          timeout = setTimeout(() => {
+            const randomMsg = easterEggMessages[Math.floor(Math.random() * easterEggMessages.length)];
+            setEasterEgg(randomMsg);
+          }, 600);
+        }
+      } else {
+        if (easterEgg) {
+          clearTimeout(timeout);
+          setEasterEgg(null);
+        }
+      }
+    });
 
-    // Move glow to follow cursor
-    if (glow) {
-      glow.style.opacity = "1";
-      glow.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(0,220,255,0.15) 0%, transparent 60%)`;
-    }
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    const card = cardRef.current;
-    const glow = glowRef.current;
-    if (card) {
-      card.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)";
-    }
-    if (glow) {
-      glow.style.opacity = "0";
-    }
-  }, []);
+    return () => {
+      unsubscribe();
+      clearTimeout(timeout);
+    };
+  }, [radius, easterEgg]);
 
   return (
-    <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+    <motion.div
       style={{
-        transition: "transform 0.15s ease-out",
+        transform,
         transformStyle: "preserve-3d",
-        willChange: "transform",
       }}
-      className="relative cursor-pointer select-none"
+      className="relative cursor-none select-none z-20" // cursor-none makes it feel like an environment
     >
       {/* Glow overlay that follows cursor */}
-      <div
-        ref={glowRef}
+      <motion.div
         className="absolute inset-0 rounded-2xl pointer-events-none z-20"
         style={{
-          opacity: 0,
-          transition: "opacity 0.3s ease",
+          opacity: glowOpacity,
+          background: glowBackground,
           mixBlendMode: "screen",
         }}
       />
@@ -77,23 +88,51 @@ function Logo3D() {
         }}
       />
 
+      {/* Easter Egg Message */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: easterEgg ? 1 : 0, y: easterEgg ? 0 : 10 }}
+        className="absolute -top-12 left-1/2 -translate-x-1/2 text-cyan-400 font-mono text-[10px] tracking-widest whitespace-nowrap z-30"
+      >
+        {easterEgg}
+      </motion.div>
+
       <img
         src="/images/dezine-labs-logo.png"
         alt="DEZINE LABS"
         className="w-[220px] sm:w-[300px] md:w-[380px] lg:w-[450px] h-auto relative z-0"
         draggable={false}
       />
-    </div>
+    </motion.div>
   );
+}
+
+// Wrapper to pass shared spring values down to KineticGrid 
+function UnifiedGrid() {
+  const { rawX, rawY } = useKineticEnvironment();
+  
+  // We can pass the rawX/rawY motion values to KineticGrid if it's updated to accept them.
+  // Wait, KineticGrid is complex. Let's just wrap it. KineticGrid currently listens to window/parent mouse events.
+  // It will naturally pick up mouse events if it's rendered inside the environment.
+  // To strictly unify, we would modify KineticGrid to read from useKineticEnvironment.
+  // For now, rendering it here keeps it under the same unified parent.
+
+  return <KineticGrid globalColor="monochrome" />;
 }
 
 function KineticLogoSection() {
   return (
-    <KineticGrid globalColor="monochrome">
-      <div className="flex min-h-screen flex-col items-center justify-center px-6">
-        <Logo3D />
+    <KineticEnvironment className="relative w-full min-h-screen overflow-hidden bg-black cursor-crosshair">
+      <UnifiedGrid />
+      <KineticGhostTypography text="CREATE" />
+      <KineticMicroData />
+      <div className="absolute inset-0 flex flex-col items-center justify-center px-6 pointer-events-none">
+        {/* pointer-events-auto on the logo so it can be hovered if needed, but the environment captures the mouse */}
+        <div className="pointer-events-auto">
+          <Logo3D />
+        </div>
       </div>
-    </KineticGrid>
+    </KineticEnvironment>
   );
 }
 
@@ -106,4 +145,3 @@ if (rootEl) {
     </React.StrictMode>
   );
 }
-

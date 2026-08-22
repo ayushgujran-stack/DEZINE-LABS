@@ -29,18 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Form Handler
   new FormHandlerModule();
 
-  // ZIP / Frame Files Upload Handler
-  const zipInput = document.getElementById('frame-zip-input');
-  if (zipInput) {
-    zipInput.addEventListener('change', (e) => {
-      const files = e.target.files;
-      if (files && files.length > 0) {
-        sequenceEngine.loadFramesFromFiles(files);
-        alert(`Successfully loaded ${files.length} custom video frame images! Scroll down to scrub.`);
-      }
-    });
-  }
-
   // Initialize Custom Circular Cursor Logic
   initCustomCursor();
 

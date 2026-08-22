@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useCallback, ReactNode } from "react";
+import { useEffect, useRef, useCallback, ReactNode, useContext } from "react";
 import { cn } from "@/lib/utils";
+import { KineticContext } from "./kinetic-environment";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -60,6 +61,7 @@ export default function KineticGrid({
   globalColor?: "default" | "monochrome";
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const kineticCtx = useContext(KineticContext);
 
   const mouseRef = useRef<Point>({ x: -9999, y: -9999 });
   const targetMouseRef = useRef<Point>({ x: -9999, y: -9999 });
@@ -313,15 +315,22 @@ export default function KineticGrid({
   const animate = useCallback(
     (now: number) => {
       const m = mouseRef.current;
-      const t = targetMouseRef.current;
-
-      m.x = lerpN(m.x, t.x, LERP_SPEED);
-      m.y = lerpN(m.y, t.y, LERP_SPEED);
+      
+      // If we are part of a unified environment, we use the shared spring/raw values
+      if (kineticCtx) {
+        // Option 1: use raw mouse directly and let our local lerp handle it
+        m.x = lerpN(m.x, kineticCtx.rawX.get(), LERP_SPEED);
+        m.y = lerpN(m.y, kineticCtx.rawY.get(), LERP_SPEED);
+      } else {
+        const t = targetMouseRef.current;
+        m.x = lerpN(m.x, t.x, LERP_SPEED);
+        m.y = lerpN(m.y, t.y, LERP_SPEED);
+      }
 
       draw(now);
       rafRef.current = requestAnimationFrame(animate);
     },
-    [draw],
+    [draw, kineticCtx],
   );
 
   // ── Setup ───────────────────────────────────────────────────────────────────
@@ -363,13 +372,20 @@ export default function KineticGrid({
     };
 
     const targetEl = canvas.parentElement || window;
-    targetEl.addEventListener("mousemove", onMouseMove as EventListener);
+    
+    // Only bind local mouse move if we aren't using the unified context
+    if (!kineticCtx) {
+      targetEl.addEventListener("mousemove", onMouseMove as EventListener);
+    }
+    
     targetEl.addEventListener("click", onClick as EventListener);
     rafRef.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("resize", setSize);
-      targetEl.removeEventListener("mousemove", onMouseMove as EventListener);
+      if (!kineticCtx) {
+        targetEl.removeEventListener("mousemove", onMouseMove as EventListener);
+      }
       targetEl.removeEventListener("click", onClick as EventListener);
       if (rafRef.current) {
         cancelAnimationFrame(rafRef.current);
