@@ -54,20 +54,39 @@ export class ScrollSequenceEngine {
       '/public/frames/'
     ];
 
+    // First try .webp for fast CDN loading
     for (const path of candidatePaths) {
       const normalizedPath = path.endsWith('/') ? path : `${path}/`;
       const loaded = await new Promise((resolve) => {
         const testImg = new Image();
         testImg.onload = () => resolve(true);
         testImg.onerror = () => resolve(false);
-        testImg.src = `${normalizedPath}frame_0001.png?v=${Date.now()}`;
+        testImg.src = `${normalizedPath}frame_0001.webp`;
       });
 
       if (loaded) {
+        this.fileExt = 'webp';
         return normalizedPath;
       }
     }
 
+    // Fallback to .png
+    for (const path of candidatePaths) {
+      const normalizedPath = path.endsWith('/') ? path : `${path}/`;
+      const loaded = await new Promise((resolve) => {
+        const testImg = new Image();
+        testImg.onload = () => resolve(true);
+        testImg.onerror = () => resolve(false);
+        testImg.src = `${normalizedPath}frame_0001.png`;
+      });
+
+      if (loaded) {
+        this.fileExt = 'png';
+        return normalizedPath;
+      }
+    }
+
+    this.fileExt = 'webp';
     return initialBaseUrl.endsWith('/') ? initialBaseUrl : `${initialBaseUrl}/`;
   }
 
@@ -91,13 +110,13 @@ export class ScrollSequenceEngine {
     // Start animation loop immediately
     this.startAnimationLoop();
 
-    // 2. Build prioritized loading list: Keyframes (every 5th frame) first, then fill rest
+    // 2. Build prioritized loading list: Keyframes (every 4th frame) first, then fill rest
     const keyframeIndices = [];
     const restIndices = [];
 
     for (let i = 0; i < this.requestedFrameCount; i++) {
       if (i === 0) continue; // already loaded
-      if (i % 5 === 0 || i === this.requestedFrameCount - 1) {
+      if (i % 4 === 0 || i === this.requestedFrameCount - 1) {
         keyframeIndices.push(i);
       } else {
         restIndices.push(i);
@@ -108,8 +127,8 @@ export class ScrollSequenceEngine {
     let loadedCount = firstImg ? 1 : 0;
     const totalToLoad = this.requestedFrameCount;
 
-    // Concurrent request queue (max 6 parallel downloads to prevent CDN throttling)
-    const CONCURRENCY_LIMIT = 6;
+    // Concurrent request queue (max 8 parallel downloads for lightweight WebP assets)
+    const CONCURRENCY_LIMIT = 8;
     let queueIndex = 0;
 
     const worker = async () => {
@@ -153,7 +172,8 @@ export class ScrollSequenceEngine {
 
   loadImageSingle(index) {
     const paddedIndex = String(index + 1).padStart(4, '0');
-    const src = `${this.workingBaseUrl}frame_${paddedIndex}.png`;
+    const ext = this.fileExt || 'webp';
+    const src = `${this.workingBaseUrl}frame_${paddedIndex}.${ext}`;
 
     return new Promise((resolve) => {
       const img = new Image();
