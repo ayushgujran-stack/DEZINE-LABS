@@ -18,7 +18,7 @@ export function KineticMicroData() {
   // A clean way to animate text content with Framer Motion without re-renders is to use an isolated component.
   
   return (
-    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden text-[10px] sm:text-[11px] font-mono text-slate-500 uppercase tracking-[0.12em]">
+    <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden text-[10px] sm:text-[11px] font-mono text-slate-500 uppercase tracking-[0.12em] hidden sm:block">
       {/* Top Right - Live Cursor Position */}
       <div className="absolute top-6 right-6 md:top-10 md:right-10 flex flex-col gap-1 text-right items-end">
         <DataRow label="CURSOR_X" motionValue={cursorX} format={(v) => Math.round(v * 1000).toString().padStart(4, "0")} />

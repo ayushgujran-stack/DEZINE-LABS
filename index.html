@@ -3,138 +3,318 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DEZINE • Next-Gen Creative Agency & Digital Production Studio</title>
-  <meta name="description" content="DEZINE is a premier creative agency specializing in high-end brand identity, scroll-driven web experiences, 3D motion graphics, and digital strategy." />
+  <title>DEZINE • Brand Identity & Digital Production Studio</title>
+  <meta name="description" content="DEZINE is an independent creative studio specializing in brand identity, interactive web experiences, and 3D motion systems." />
 
-  <!-- Google Fonts & FontAwesome -->
+  <!-- Google Fonts: Archivo (Variable), Geist Mono, Poppins, Instrument Serif, IBM Plex Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=IBM+Plex+Mono:wght@300;400;500&family=Poppins:wght@300;400;500;600;700;800;900&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
   <!-- Stylesheets -->
   <link rel="stylesheet" href="/styles/main.css" />
   <link rel="stylesheet" href="/styles/components.css" />
-  <link rel="stylesheet" href="/styles/scroll-typography.css" />
+  <link rel="stylesheet" href="/styles/editorial-inspiration.css" />
 </head>
 <body>
 
-  <!-- Custom Magnetic Cursor (Trionn Style) -->
-  <div id="cursor-dot"></div>
-  <div id="cursor-ring"></div>
+  <!-- Custom Editorial Interactive Cursor (Mike Wilcock dot + text ring) -->
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"><span>View</span></div>
 
-  <!-- Floating Scroll Action Button -->
-  <div id="scroll-indicator-btn" class="magnetic">
-    <span>Scroll</span>
-    <i class="fas fa-chevron-down scroll-bounce-icon"></i>
-  </div>
-
-  <!-- Preloader Screen -->
-  <div id="preloader">
-    <div class="navbar-brand" style="font-size: 2.2rem;">
-      <span class="brand-dot"></span> DEZINE
-    </div>
-    <div class="loader-bar-track">
-      <div class="loader-bar-fill"></div>
-    </div>
-    <div id="preloader-status" style="color: var(--text-muted); font-size: 0.9rem;">Initializing sequence...</div>
-  </div>
-
-  <!-- Navigation Bar -->
-  <nav class="navbar" id="navbar">
-    <a href="#" class="navbar-brand magnetic">
-      <span class="brand-dot"></span> DEZINE
+  <!-- Editorial Top Header -->
+  <header class="mw-header">
+    <a href="#" class="mw-header__logo" data-cursor="DEZINE">
+      <span class="mw-header__logo-dez">DEZINE</span>
+      <span class="mw-header__logo-badge">LABS</span>
+      <span class="mw-header__logo-rest">studio</span>
     </a>
-    <ul class="nav-links">
-      <li><a href="#manifesto" class="nav-link magnetic">Manifesto</a></li>
-      <li><a href="#portfolio" class="nav-link magnetic">Work</a></li>
-      <li><a href="#estimator" class="nav-link magnetic">Estimator</a></li>
-      <li><a href="#contact" class="nav-link magnetic">Contact</a></li>
-    </ul>
-    <a href="#contact" class="btn btn-primary nav-cta magnetic">Start a Project</a>
+
+    <div class="mw-header__status">
+      <span class="mw-header__status-pulse"></span>
+      <span>Available for Q2/Q3 Projects</span>
+      <span style="opacity: 0.4;">/</span>
+      <span id="header-clock">17:15 UTC</span>
+    </div>
+
+    <nav class="mw-header__links" aria-label="Main Navigation">
+      <a href="#expertise" class="mw-header__link" data-cursor="Craft">Expertise</a>
+      <a href="#featured-projects" class="mw-header__link" data-cursor="Work">Work</a>
+      <a href="#kinetic-grid-section" class="mw-header__link" data-cursor="Lab">The Lab</a>
+      <a href="#services" class="mw-header__link" data-cursor="Services">Services</a>
+      <a href="#estimator" class="mw-header__link" data-cursor="Scope">Estimator</a>
+      <a href="#contact" class="mw-header__cta" data-cursor="Let's build">Start a Project</a>
+    </nav>
+
+    <button type="button" class="mw-header__menu-btn" aria-expanded="false" data-cursor="Menu">
+      Menu ☰
+    </button>
+  </header>
+
+  <!-- Fullscreen Curtain Menu -->
+  <nav class="mw-menu" id="site-curtain-menu" aria-label="Curtain Menu">
+    <div class="mw-menu__items">
+      <a href="#hero" class="mw-menu__item" data-cursor="Top">
+        <span class="mw-menu__label">Home</span>
+        <span class="mw-menu__number">01</span>
+      </a>
+      <a href="#expertise" class="mw-menu__item" data-cursor="Craft">
+        <span class="mw-menu__label">Expertise</span>
+        <span class="mw-menu__number">02</span>
+      </a>
+      <a href="#featured-projects" class="mw-menu__item" data-cursor="Work">
+        <span class="mw-menu__label">Selected Work</span>
+        <span class="mw-menu__number">03</span>
+      </a>
+      <a href="#kinetic-grid-section" class="mw-menu__item" data-cursor="Lab">
+        <span class="mw-menu__label">The Lab</span>
+        <span class="mw-menu__number">04</span>
+      </a>
+      <a href="#services" class="mw-menu__item" data-cursor="Capabilities">
+        <span class="mw-menu__label">Services</span>
+        <span class="mw-menu__number">05</span>
+      </a>
+      <a href="#estimator" class="mw-menu__item" data-cursor="Calculator">
+        <span class="mw-menu__label">Project Scope</span>
+        <span class="mw-menu__number">06</span>
+      </a>
+      <a href="#contact" class="mw-menu__item" data-cursor="Inquire">
+        <span class="mw-menu__label">Contact</span>
+        <span class="mw-menu__number">07</span>
+      </a>
+    </div>
+
+    <div style="font-family: var(--font-mono); font-size: 13px; color: var(--color-label); display: flex; justify-content: space-between; border-top: 1px solid var(--color-hairline); padding-top: 24px;">
+      <a href="mailto:contact@dezinelabs.com" style="color: var(--color-text);">contact@dezinelabs.com</a>
+      <span>Global Remote & Studio • Next-Gen Digital Production</span>
+    </div>
   </nav>
 
-  <!-- Main Scroll-Driven Canvas Video Frame Sequence -->
-  <main>
-    <div class="scroll-sequence-container">
-      
-      <!-- Fixed Viewport Canvas -->
-      <div class="sticky-canvas-viewport">
-        <canvas id="scroll-canvas"></canvas>
-        <div class="canvas-overlay-vignette"></div>
-        <!-- Scroll Typography React Mount (z-index 3, synced to video progress) -->
-        <div id="react-scroll-typography-root"></div>
+  <!-- Editorial Hero Section -->
+  <section class="mw-hero" id="hero">
+    <div class="mw-hero__top eyebrow">
+      <span>Independent Studio • ©2026</span>
+      <span class="mw-hero__meta-centre">Brand Identity & Digital Production</span>
+      <span>Global Studio</span>
+    </div>
+
+    <div class="mw-hero__headline" id="hero-headline-root">
+      <h1 class="mw-hero__line">
+        DEZINE LABS
+      </h1>
+      <div class="mw-hero__line mw-hero__line--second">
+        <span>CREATIVE</span>
+        <span class="mw-hero__line-accent">STUDIO</span>
       </div>
     </div>
 
-    <!-- Page Sections Outside Scroll Sequence -->
+    <div class="mw-hero__bottom">
+      <p class="mw-hero__intro">
+        We design and build brand identities, web experiences, and 3D motion systems for ambitious teams worldwide.
+      </p>
+      <span class="mw-hero__scroll eyebrow">
+        ↓ Scroll to explore
+      </span>
+      <div class="mw-hero__end">
+        <a href="#work" class="mw-hero__button" data-cursor="Explore">
+          Explore Selected Work →
+        </a>
+      </div>
+    </div>
+  </section>
 
-    <!-- Kinetic Grid Interactive Section (Replaces Removed Core Capabilities) -->
+  <main>
+
+
+    <!-- Kinetic Grid Interactive Logo & Environment -->
     <section id="kinetic-grid-section">
       <div id="react-kinetic-grid-root"></div>
     </section>
 
-    <!-- Featured Projects — Card Fan Carousel -->
-    <section class="page-section" id="portfolio" style="padding-top: 2rem; padding-bottom: 2rem;">
+    <!-- Core Expertise Disciplines — Minimal Hover Image Reveal (Originkit Component) -->
+    <section class="mw-selected-work" id="expertise">
+      <div class="mw-selected-work__head eyebrow">
+        <h2 style="font-size: 12px; letter-spacing: 0.08em; font-weight: 500;">What We Specialize In</h2>
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <span style="color: var(--color-label);">Core Disciplines</span>
+        </div>
+      </div>
+
+      <!-- React Mount Point for Originkit Hover Image Reveal -->
+      <div id="react-hover-reveal-root"></div>
+    </section>
+
+    <!-- Up Close 3D Interactive Infinite Photography Gallery (React Three Fiber Shader Cloth) -->
+    <section class="mw-upclose-3d" id="upclose">
+      <div id="react-upclose-root"></div>
+    </section>
+
+    <!-- Full-Frame Featured Projects Showcase with Interactive Dither Canvas -->
+    <section id="featured-projects" class="mw-featured-fullframe" style="width: 100%; position: relative; margin: 0; padding: 0; overflow: hidden;">
       <div id="react-portfolio-root"></div>
     </section>
 
-
-    <!-- Case Study Popup Modal -->
-    <div class="modal" id="portfolio-modal">
-      <div class="modal-content" id="modal-body">
-        <button class="modal-close magnetic"><i class="fas fa-xmark"></i></button>
-        <!-- Dynamic modal content -->
+    <!-- Editorial Statement Section (Scroll word illumination & Crystal Sparkle) -->
+    <section class="mw-statement">
+      <div class="mw-statement__container">
+        <span class="eyebrow eyebrow--accent mw-statement__label">Agency Philosophy</span>
+        <p class="mw-statement__text">
+          <span class="mw-statement__word">We</span>
+          <span class="mw-statement__word">are</span>
+          <span id="react-crystal-glow-root" class="mw-statement__crystal-wrap"></span>
+          <span class="mw-statement__word">—</span>
+          <span class="mw-statement__word">we</span>
+          <span class="mw-statement__word">conceive,</span>
+          <span class="mw-statement__word">sculpt</span>
+          <span class="mw-statement__word">and</span>
+          <span class="mw-statement__word">engineer</span>
+          <span class="mw-statement__word">digital</span>
+          <span class="mw-statement__word">artefacts</span>
+          <span class="mw-statement__word">that</span>
+          <span class="mw-statement__word mw-statement__word--italic">move,</span>
+          <span class="mw-statement__word mw-statement__word--italic">react</span>
+          <span class="mw-statement__word">and</span>
+          <span class="mw-statement__word">resonate</span>
+          <span class="mw-statement__word">at</span>
+          <span class="mw-statement__word">the</span>
+          <span class="mw-statement__word">highest</span>
+          <span class="mw-statement__word">frequency.</span>
+          <span class="mw-statement__word">Designed</span>
+          <span class="mw-statement__word">with</span>
+          <span class="mw-statement__word">intent,</span>
+          <span class="mw-statement__word">executed</span>
+          <span class="mw-statement__word">in</span>
+          <span class="mw-statement__word">code,</span>
+          <span class="mw-statement__word">built</span>
+          <span class="mw-statement__word">for</span>
+          <span class="mw-statement__word mw-statement__word--accent">industry-defining</span>
+          <span class="mw-statement__word">brands.</span>
+        </p>
       </div>
-    </div>
+    </section>
 
-    <!-- Interactive Scope & Cost Estimator Section (Container Scroll Animation) -->
-    <section id="estimator">
+    <!-- What We Do: Interactive Service Tiles -->
+    <section class="mw-services" id="services">
+      <div class="mw-services__head eyebrow">
+        <h2>Services & Capabilities</h2>
+        <a href="#estimator" style="color: var(--color-accent);" data-cursor="Scope">Calculate Estimate →</a>
+      </div>
+
+      <div class="mw-services__grid">
+        
+        <div class="mw-services__tile" data-cursor="Brand">
+          <div class="mw-services__fill"></div>
+          <div class="mw-services__tile-content">
+            <div class="mw-services__tile-header">
+              <span>01</span>
+              <span class="mw-services__tile-arrow">→</span>
+            </div>
+            <div>
+              <h3 class="mw-services__tile-title">Brand Identity</h3>
+              <p class="mw-services__tile-desc">
+                Comprehensive visual systems, typography guidelines, art direction, and iconic identity architecture.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mw-services__tile" data-cursor="Motion">
+          <div class="mw-services__fill"></div>
+          <div class="mw-services__tile-content">
+            <div class="mw-services__tile-header">
+              <span>02</span>
+              <span class="mw-services__tile-arrow">→</span>
+            </div>
+            <div>
+              <h3 class="mw-services__tile-title">3D Motion & VFX</h3>
+              <p class="mw-services__tile-desc">
+                Kinetic motion graphics, high-fidelity spatial animation reels, and Cinema 4D simulation assets.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mw-services__tile" data-cursor="Code">
+          <div class="mw-services__fill"></div>
+          <div class="mw-services__tile-content">
+            <div class="mw-services__tile-header">
+              <span>03</span>
+              <span class="mw-services__tile-arrow">→</span>
+            </div>
+            <div>
+              <h3 class="mw-services__tile-title">Web Experiences</h3>
+              <p class="mw-services__tile-desc">
+                Cinematic scroll-driven sites, interactive WebGL shaders, Next.js / Vite high-performance web apps.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mw-services__tile" data-cursor="Commerce">
+          <div class="mw-services__fill"></div>
+          <div class="mw-services__tile-content">
+            <div class="mw-services__tile-header">
+              <span>04</span>
+              <span class="mw-services__tile-arrow">→</span>
+            </div>
+            <div>
+              <h3 class="mw-services__tile-title">Headless Commerce</h3>
+              <p class="mw-services__tile-desc">
+                Custom Shopify architectures, bespoke checkout journeys, and 3D product customization engines.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Build Your Project Scope Section -->
+    <section id="estimator" class="page-section" style="padding-top: 4rem; padding-bottom: 4rem; overflow: hidden; position: relative;">
+      <div id="contact" style="position: absolute; top: 0; left: 0; pointer-events: none;"></div>
       <div id="react-estimator-root"></div>
     </section>
 
+    <!-- Editorial Callout Band (Mike Wilcock Big Footer Callout) -->
+    <section class="mw-footer">
+      <div class="mw-footer__label eyebrow">Got an ambitious vision?</div>
+      <a href="#contact" class="mw-footer__big" data-cursor="Let's build">
+        LET'S TALK →
+      </a>
 
-
-    <!-- Contact & Brief Submission Section -->
-    <section class="page-section" id="contact" style="padding-top: 4rem; padding-bottom: 4rem; overflow: hidden;">
-      <div id="react-build-something-root"></div>
-    </section>
-
-    <!-- Prototype Building Section -->
-    <section class="page-section" id="prototype-building-section" style="padding-top: 2rem; padding-bottom: 4rem; text-align: center;">
-      <div style="max-width: 1100px; margin: 0 auto; padding: 0 1.5rem;">
+      <div class="mw-footer__row">
+        <a href="mailto:contact@dezinelabs.com" class="mw-footer__email" data-cursor="Email">contact@dezinelabs.com</a>
         
-        <!-- Status Pill -->
-        <div style="margin-bottom: 1.5rem; display: inline-flex; align-items: center; gap: 0.75rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.25); border-radius: 9999px; padding: 0.5rem 1.25rem; backdrop-filter: blur(12px);">
-          <span style="width: 8px; height: 8px; border-radius: 50%; background: #FFFFFF; box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); display: inline-block;"></span>
-          <span style="font-family: var(--font-heading); font-size: 0.85rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #FFFFFF;">
-            PROTOTYPE BUILDING<span class="building-dots">......</span>
-          </span>
+        <div class="mw-footer__socials">
+          <a href="#" target="_blank" rel="noopener noreferrer" data-cursor="Link">LinkedIn</a>
+          <a href="#" target="_blank" rel="noopener noreferrer" data-cursor="Link">Twitter / X</a>
+          <a href="#" target="_blank" rel="noopener noreferrer" data-cursor="Link">Dribbble</a>
+          <a href="#" target="_blank" rel="noopener noreferrer" data-cursor="Link">Instagram</a>
         </div>
 
-        <!-- 3D Prototype Image Container -->
-        <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.12); box-shadow: 0 20px 50px rgba(0,0,0,0.8); background: #000000;">
-          <img src="/images/prototype-building.jpg" alt="DEZINE Prototype Building" style="width: 100%; height: auto; display: block; object-fit: cover;" />
-          <div style="position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.6) 100%);"></div>
+        <div>
+          <span>DEZINE LABS © 2026</span>
         </div>
 
+        <button type="button" class="mw-footer__top-btn" data-cursor="Top">
+          Back to top ↑
+        </button>
       </div>
     </section>
 
   </main>
 
-  <!-- React Gradient Footer Mount Point -->
-  <div id="react-footer-root"></div>
-
   <!-- Entry Scripts -->
   <script type="module" src="/js/main.js"></script>
-  <script type="module" src="/js/scroll-typography-mount.tsx"></script>
   <script type="module" src="/js/kinetic-mount.tsx"></script>
+  <script type="module" src="/js/hover-reveal-mount.tsx"></script>
+  <script type="module" src="/js/upclose-gallery-mount.tsx"></script>
   <script type="module" src="/js/portfolio-mount.tsx"></script>
+  <script type="module" src="/js/crystal-glow-mount.tsx"></script>
+  <script type="module" src="/js/hero-weight-hover-mount.tsx"></script>
   <script type="module" src="/js/estimator-mount.tsx"></script>
-  <script type="module" src="/js/build-something-mount.tsx"></script>
-  <script type="module" src="/js/footer-mount.tsx"></script>
 </body>
 </html>

@@ -4,7 +4,6 @@ import { motion, useTransform, useMotionTemplate } from "framer-motion";
 import KineticGrid from "@/components/ui/kinetic-grid";
 import { KineticEnvironment, useKineticEnvironment } from "@/components/ui/kinetic-environment";
 import { KineticGhostTypography } from "@/components/ui/kinetic-ghost-typography";
-import { KineticMicroData } from "@/components/ui/kinetic-micro-data";
 import "../styles/tailwind.css";
 
 const easterEggMessages = [
@@ -68,9 +67,9 @@ function Logo3D() {
         transform,
         transformStyle: "preserve-3d",
       }}
-      className="relative cursor-none select-none z-20" // cursor-none makes it feel like an environment
+      className="relative cursor-none select-none z-20"
     >
-      {/* Glow overlay that follows cursor */}
+      {/* Subtle glow overlay that follows cursor */}
       <motion.div
         className="absolute inset-0 rounded-2xl pointer-events-none z-20"
         style={{
@@ -92,7 +91,7 @@ function Logo3D() {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: easterEgg ? 1 : 0, y: easterEgg ? 0 : 10 }}
-        className="absolute -top-12 left-1/2 -translate-x-1/2 text-cyan-400 font-mono text-[10px] tracking-widest whitespace-nowrap z-30"
+        className="absolute -top-12 left-1/2 -translate-x-1/2 text-neutral-300 font-mono text-[10px] tracking-widest whitespace-nowrap z-30"
       >
         {easterEgg}
       </motion.div>
@@ -109,14 +108,6 @@ function Logo3D() {
 
 // Wrapper to pass shared spring values down to KineticGrid 
 function UnifiedGrid() {
-  const { rawX, rawY } = useKineticEnvironment();
-  
-  // We can pass the rawX/rawY motion values to KineticGrid if it's updated to accept them.
-  // Wait, KineticGrid is complex. Let's just wrap it. KineticGrid currently listens to window/parent mouse events.
-  // It will naturally pick up mouse events if it's rendered inside the environment.
-  // To strictly unify, we would modify KineticGrid to read from useKineticEnvironment.
-  // For now, rendering it here keeps it under the same unified parent.
-
   return <KineticGrid globalColor="monochrome" />;
 }
 
@@ -125,7 +116,6 @@ function KineticLogoSection() {
     <KineticEnvironment className="relative w-full min-h-screen overflow-hidden bg-black cursor-crosshair">
       <UnifiedGrid />
       <KineticGhostTypography text="CREATE" />
-      <KineticMicroData />
       <div className="absolute inset-0 flex flex-col items-center justify-center px-6 pointer-events-none">
         {/* pointer-events-auto on the logo so it can be hovered if needed, but the environment captures the mouse */}
         <div className="pointer-events-auto">

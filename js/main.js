@@ -2,23 +2,14 @@
    DEZINE CREATIVE AGENCY - MAIN SCRIPT
    ========================================== */
 
-import { ScrollSequenceEngine } from './scroll-sequence.js';
 import { PortfolioModule } from './portfolio.js';
 import { EstimatorModule } from './estimator.js';
 import { FormHandlerModule } from './form-handler.js';
 import { initTrionnInteractions } from './trionn-interactions.js';
+import { initEditorialInteractions } from './editorial-engine.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('Initializing DEZINE Creative Agency Engine...');
-
-  // Initialize Scroll Sequence Engine
-  const sequenceEngine = new ScrollSequenceEngine({
-    canvasId: 'scroll-canvas',
-    containerSelector: '.scroll-sequence-container',
-    frameCount: 99
-  });
-
-  sequenceEngine.loadFrames('/frames/');
 
   // Initialize Portfolio Module
   new PortfolioModule();
@@ -37,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize Trionn Interactions (Lenis, Magnetic, Scroll Reveals)
   initTrionnInteractions();
+
+  // Initialize Editorial / Mike Wilcock inspired interactions
+  initEditorialInteractions();
 
   // Smooth scroll anchors
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {

@@ -123,7 +123,7 @@ export function KineticEnvironment({ children, className }: { children: React.Re
         className={className}
         onPointerMove={handlePointerMove}
         onPointerLeave={handlePointerLeave}
-        style={{ touchAction: "none" }} // Prevent native scrolling when dragging on this section
+        style={{ touchAction: "pan-y" }} // Allow natural vertical scrolling on touch devices
       >
         {children}
       </div>
