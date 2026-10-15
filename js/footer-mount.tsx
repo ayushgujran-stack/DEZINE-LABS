@@ -23,7 +23,12 @@ const columns = [
   },
   {
     title: "Connect",
-    links: ["Twitter", "Instagram", "Dribbble", "LinkedIn", "Email"],
+    links: [
+      { name: "LinkedIn", href: "https://www.linkedin.com/in/ayush-poojary-7237362b9" },
+      { name: "Instagram", href: "https://www.instagram.com/dezine.labs?utm_source=ig_web_button_share_sheet&obrf=ZDNlZDc0MzIxNw==" },
+      { name: "Fiverr", href: "https://www.fiverr.com/ayush_poojar" },
+      { name: "Email", href: "mailto:contact@dezinelabs.com" },
+    ],
   },
 ];
 
@@ -77,16 +82,24 @@ function DezineFooter() {
               <div key={col.title}>
                 <h3 className="text-foreground">{col.title}</h3>
                 <ul className="mt-4 flex flex-col gap-3">
-                  {col.links.map((link) => (
-                    <li key={link}>
-                      <a
-                        href="#"
-                        className="text-muted-foreground transition-colors hover:text-foreground"
-                      >
-                        {link}
-                      </a>
-                    </li>
-                  ))}
+                  {col.links.map((link) => {
+                    const isObj = typeof link === "object";
+                    const label = isObj ? link.name : link;
+                    const href = isObj ? link.href : "#";
+                    const isExternal = href.startsWith("http");
+                    return (
+                      <li key={label}>
+                        <a
+                          href={href}
+                          target={isExternal ? "_blank" : undefined}
+                          rel={isExternal ? "noopener noreferrer" : undefined}
+                          className="text-muted-foreground transition-colors hover:text-foreground"
+                        >
+                          {label}
+                        </a>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}
