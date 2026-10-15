@@ -26,7 +26,7 @@ const columns = [
     links: [
       { name: "LinkedIn", href: "https://www.linkedin.com/in/ayush-poojary-7237362b9" },
       { name: "Instagram", href: "https://www.instagram.com/dezine.labs?utm_source=ig_web_button_share_sheet&obrf=ZDNlZDc0MzIxNw==" },
-      { name: "Fiverr", href: "https://www.fiverr.com/ayush_poojar" },
+      { name: "Fiverr", href: "https://www.fiverr.com/ayush_poojary" },
       { name: "Email", href: "mailto:contact@dezinelabs.com" },
     ],
   },
